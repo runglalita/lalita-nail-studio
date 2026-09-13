@@ -125,7 +125,7 @@ Node.js server ไฟล์เดียว (`server.js`) ไม่มี depende
 
 | ข้อมูล | ตำแหน่งที่แก้ |
 | --- | --- |
-| เบอร์โทร / ช่องทางติดต่อ | footer และหน้า contact/ticket ทุกหน้า (ค้นหา `082-949-0410`, `@Rxinbxw.07`, `@lalitanail`) |
+| เบอร์โทร / ช่องทางติดต่อ | footer และหน้า contact/ticket ทุกหน้า (ค้นหา `082-949-0410`, `@rxng_lr`, `@lalitanail`) |
 | ราคา | `pricing.html` และการ์ดราคาใน `index.html` |
 | รายการบริการ | `services.html` และ select ใน `booking.html` (ค่า `value` ของ option ใช้อ้างอิงใน `?service=`) |
 | ข้อมูลร้าน / รีวิว | `about.html`, `index.html` |
