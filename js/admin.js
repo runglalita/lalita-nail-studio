@@ -52,10 +52,25 @@
     return d.innerHTML;
   }
 
-  const statusLabels = { new: "ใหม่", confirmed: "ยืนยันแล้ว", done: "เสร็จสิ้น", cancelled: "ยกเลิก" };
+  const statusLabels = { new: "รอตรวจสอบมัดจำ", deposited: "จ่ายมัดจำแล้ว", confirmed: "ยืนยันคิวแล้ว", done: "เสร็จสิ้น", cancelled: "ยกเลิก" };
 
   function badge(status) {
     return `<span class="badge b-${status}">${esc(statusLabels[status] || status)}</span>`;
+  }
+
+  async function openSlip(id) {
+    try {
+      const resp = await fetch("/api/slip?id=" + id, {
+        headers: { Authorization: "Bearer " + getToken() },
+      });
+      if (!resp.ok) throw new Error("unauthorized");
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (err) {
+      showFlash("เปิดสลิปไม่สำเร็จ — เช็ค token อีกครั้ง", false);
+    }
   }
 
   async function load() {
@@ -102,7 +117,7 @@
   function renderBookings(rows) {
     const tbody = document.getElementById("bookingsBody");
     if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="10" class="empty">ยังไม่มีรายการจอง</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="11" class="empty">ยังไม่มีรายการจอง</td></tr>`;
       return;
     }
     tbody.innerHTML = rows
@@ -116,6 +131,7 @@
           <td>${esc(b.date)}</td>
           <td>${esc(b.time)} น.</td>
           <td>${esc(b.notes || "-")}</td>
+          <td>${b.slip_path ? `<a href="#" onclick="return false" data-slip="${b.id}" class="slip-link">ดูสลิป</a>` : "-"}</td>
           <td><select class="status" data-id="${b.id}" data-status="${esc(b.status)}">
             ${Object.entries(statusLabels)
               .map(([v, l]) => `<option value="${v}" ${v === b.status ? "selected" : ""}>${esc(l)}</option>`)
@@ -125,6 +141,12 @@
         </tr>`
       )
       .join("");
+    tbody.querySelectorAll("a[data-slip]").forEach((a) => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        openSlip(Number(a.dataset.slip));
+      });
+    });
   }
 
   function renderContacts(rows) {
