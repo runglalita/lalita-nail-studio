@@ -277,7 +277,7 @@
         setError(phone, "กรุณากรอกเบอร์โทรศัพท์", true);
         ok = false;
       } else if (!phoneValid(phone.value)) {
-        setError(phone, "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 099-999-9999", true);
+        setError(phone, "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 082-949-0410", true);
         ok = false;
       } else {
         setError(phone, "", false);
@@ -458,7 +458,7 @@
       }
 
       if (cPhone.value.trim() && !phoneValid(cPhone.value)) {
-        setError(cPhone, "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 099-999-9999", true);
+        setError(cPhone, "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 082-949-0410", true);
         ok = false;
       } else {
         setError(cPhone, "", false);

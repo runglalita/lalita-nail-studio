@@ -214,7 +214,7 @@ async function handleApi(req, res, url) {
     const notes = field("notes").slice(0, 500);
 
     if (name.length < 2) return respond(res, 400, { ok: false, error: "กรุณากรอกชื่อของคุณ" });
-    if (!phoneValid(phone)) return respond(res, 400, { ok: false, error: "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 099-999-9999" });
+    if (!phoneValid(phone)) return respond(res, 400, { ok: false, error: "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 082-949-0410" });
     if (!Number.isInteger(people) || people < 1 || people > 10) return respond(res, 400, { ok: false, error: "จำนวนคนต้องอยู่ระหว่าง 1 - 10" });
     if (!service) return respond(res, 400, { ok: false, error: "กรุณาเลือกบริการ" });
     if (!dateValid(date)) return respond(res, 400, { ok: false, error: "กรุณาเลือกวันที่ที่ถูกต้อง (ไม่เป็นอดีต)" });

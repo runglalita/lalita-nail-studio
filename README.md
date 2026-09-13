@@ -125,7 +125,7 @@ Node.js server ไฟล์เดียว (`server.js`) ไม่มี depende
 
 | ข้อมูล | ตำแหน่งที่แก้ |
 | --- | --- |
-| เบอร์โทร / ช่องทางติดต่อ | footer และหน้า contact/ticket ทุกหน้า (ค้นหา `099-999-9999`, `@lalitanail`) |
+| เบอร์โทร / ช่องทางติดต่อ | footer และหน้า contact/ticket ทุกหน้า (ค้นหา `082-949-0410`, `@Rxinbxw.07`, `@lalitanail`) |
 | ราคา | `pricing.html` และการ์ดราคาใน `index.html` |
 | รายการบริการ | `services.html` และ select ใน `booking.html` (ค่า `value` ของ option ใช้อ้างอิงใน `?service=`) |
 | ข้อมูลร้าน / รีวิว | `about.html`, `index.html` |
@@ -143,6 +143,6 @@ Node.js server ไฟล์เดียว (`server.js`) ไม่มี depende
 ## หมายเหตุ
 
 รูปภาพทั้งหมดใน `images/` ตอนนี้เป็น **SVG placeholder** (ภาพกราฟิกเล็บแบบนามธรรม) ให้เปลี่ยนเป็นรูปถ่ายจริงก่อนเปิดใช้งานจริง
-ตำแหน่งร้าน ที่อยู่ และจำนวนสถิติ (ลูกค้า, ผลงาน ฯลฯ) เป็นข้อมูลสมมติ
+จำนวนสถิติ (ลูกค้า, ผลงาน ฯลฯ) เป็นข้อมูลสมมติ
 
 © 2026 Lalita Nail Studio. All Rights Reserved.
