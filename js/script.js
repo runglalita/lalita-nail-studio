@@ -243,7 +243,6 @@
     const service = $("#bk-service");
     const people = $("#bk-people");
     const notes = $("#bk-notes");
-    const slip = $("#bk-slip");
 
     // Preselect service from URL ?service=...
     const params = new URLSearchParams(window.location.search);
@@ -277,7 +276,7 @@
         setError(phone, "กรุณากรอกเบอร์โทรศัพท์", true);
         ok = false;
       } else if (!phoneValid(phone.value)) {
-        setError(phone, "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 082-949-0410", true);
+        setError(phone, "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 099-999-9999", true);
         ok = false;
       } else {
         setError(phone, "", false);
@@ -315,13 +314,6 @@
         setError(people, "", false);
       }
 
-      if (slip && !slip.files.length) {
-        setError(slip, "กรุณาอัปโหลดสลิปโอนมัดจำค่า 50 บาท", true);
-        ok = false;
-      } else {
-        setError(slip, "", false);
-      }
-
       return ok;
     };
 
@@ -347,19 +339,18 @@
 
       setFormBusy(true);
       try {
-        const fd = new FormData();
-        fd.append("name", name.value.trim());
-        fd.append("phone", phone.value.trim());
-        fd.append("people", n);
-        fd.append("service", service.value);
-        fd.append("date", date.value);
-        fd.append("time", time.value);
-        fd.append("notes", notes ? notes.value.trim() : "");
-        if (slip && slip.files[0]) fd.append("slip", slip.files[0]);
-
         const resp = await fetch("/api/booking", {
           method: "POST",
-          body: fd, // fetch ตั้ง Content-Type พร้อม boundary ให้เอง
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name.value.trim(),
+            phone: phone.value.trim(),
+            people: n,
+            service: service.value,
+            date: date.value,
+            time: time.value,
+            notes: notes ? notes.value.trim() : "",
+          }),
         });
         const data = await resp.json().catch(() => ({}));
         if (!resp.ok || !data.ok) {
@@ -379,7 +370,6 @@
             ["เบอร์โทร", phone.value.trim()],
             ["บริการ", `${service.value} × ${n}`],
             ["วันที่", `${fmtDate} เวลา ${time.value} น.`],
-            ["มัดจำ", "โอนแล้ว 50 บาท"],
           ];
           if (notes && notes.value.trim()) items.push(["หมายเหตุ", notes.value.trim()]);
           items.forEach(([k, v]) => {
@@ -398,14 +388,14 @@
         const status = document.getElementById("formStatus");
         if (status) {
           status.querySelector("strong").textContent = "จองคิวเรียบร้อยแล้ว";
-          status.querySelector("p").textContent = "รอช่างตรวจสอบสลิปมัดจำและยืนยันคิว (รอแจ้งทางโทรศัพท์)";
+          status.querySelector("p").textContent = "กรุณารอการยืนยันจากทางร้าน";
         }
         showStatus("formStatus");
       } catch (err) {
         const status = document.getElementById("formStatus");
         if (status) {
           status.querySelector("strong").textContent = "ส่งข้อมูลไม่สำเร็จ";
-          status.querySelector("p").textContent = err.message + " — กรุณาลองใหม่ หรือแจ้งผ่านโทรศัพท์ 082-949-0410";
+          status.querySelector("p").textContent = err.message + " — กรุณาลองใหม่ หรือแจ้งผ่าน LINE @lalitanail";
           showStatus("formStatus", false);
         } else {
           alert(err.message);
@@ -423,11 +413,10 @@
     }
 
     // Clear error as user types
-    [name, phone, time, service, people, date, notes].forEach((f) => {
+    [name, phone, time, service, people, date].forEach((f) => {
       f &&
         f.addEventListener("input", () => setError(f, "", false));
     });
-    slip && slip.addEventListener("change", () => setError(slip, "", false));
   }
 
   /* ------------------------------------------------------------------ *
@@ -458,7 +447,7 @@
       }
 
       if (cPhone.value.trim() && !phoneValid(cPhone.value)) {
-        setError(cPhone, "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 082-949-0410", true);
+        setError(cPhone, "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 099-999-9999", true);
         ok = false;
       } else {
         setError(cPhone, "", false);
@@ -519,7 +508,7 @@
         const status = document.getElementById("contactStatus");
         if (status) {
           status.querySelector("strong").textContent = "ส่งข้อมูลไม่สำเร็จ";
-          status.querySelector("p").textContent = err.message + " — กรุณาลองใหม่ หรือแจ้งผ่านโทรศัพท์ 082-949-0410";
+          status.querySelector("p").textContent = err.message + " — กรุณาลองใหม่ หรือแจ้งผ่าน LINE @lalitanail";
           showStatus("contactStatus", false);
         } else {
           alert(err.message);

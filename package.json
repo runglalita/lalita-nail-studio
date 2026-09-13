@@ -10,8 +10,5 @@
     "node": ">=22.5.0"
   },
   "license": "UNLICENSED",
-  "private": true,
-  "devDependencies": {
-    "qrcode": "^1.5.4"
-  }
+  "private": true
 }

@@ -36,7 +36,7 @@ todolist4/
 
 - Sticky header พร้อม hamburger menu บน mobile (≤ 1023px)
 - โปสการ์ด reveal-on-scroll (IntersectionObserver), hover effect ทุกการ์ด
-- ปุ่มลอย: โทร / Instagram / กลับขึ้นบน
+- ปุ่มลอย: โทร / LINE / Instagram / กลับขึ้นบน
 - แกลเลอรี: ตัวกรอง All · Minimal · Korean · French · Glitter · Luxury + Lightbox (เลื่อนซ้าย-ขวา, ปุ่ม ESC)
 - ฟอร์มจองคิว: validation ชื่อ, เบอร์โทร (ไทย 0XXXXXXXXX), วันที่ต้องไม่เป็นอดีต, เวลา 10:00–19:00, ต้องเลือกบริการ, จำนวน 1–10 พร้อมสรุปข้อมูลก่อนส่ง
 - ฟอร์มติดต่อ: ชื่อและข้อความบังคับ, อีเมล/โทรศัพท์เป็นตัวเลือก (ตรวจรูปแบบเมื่อกรอก)
@@ -97,16 +97,6 @@ Node.js server ไฟล์เดียว (`server.js`) ไม่มี depende
 | `ADMIN_TOKEN` | รหัสดูรายการจองทาง `/api/bookings?token=...` (**เปลี่ยนจากค่า default `admin123` ก่อนเปิดใช้จริง!**) |
 | `LINE_NOTIFY_TOKEN` | ถ้าใส่ token จาก https://notify-bot.line.me ระบบจะส่งแจ้งเตือนอัตโนมัติเมื่อมีจอง/ข้อความใหม่ |
 
-### ระบบค่ามัดจำ (50 บาท + สลิป)
-
-- ฟอร์มจองกำหนดให้**ต้องอัปโหลดสลิปโอนมัดจำ** (JPG/PNG/WebP ไม่เกิน 5MB) ก่อนยืนยันการจอง
-- สลิปจะถูกบันทึกใน `data/slips/` และกันสิทธิ์ดูผ่านหน้าเว็บ (เข้าถึงได้เฉพาะ `/api/slip?id=...` ที่ต้องใช้ `ADMIN_TOKEN`)
-- หน้า Admin (`/admin.html`) มีปุ่มดูสลิปของแต่ละคิว และสถานะ `รอตรวจสอบมัดจำ` → `จ่ายมัดจำแล้ว` → `ยืนยันคิวแล้ว`
-- QR พร้อมเพย์ในหน้าเว็บเป็น QR จริงจากเบอร์ PromptPay **080-817-8386** (ธนาคารออมสิน) ยอดใน QR = 50.00 บาท
-- ถ้าจะแก้ QR (เช่นย้ายเบอร์): ใช้สคริปต์ `node scripts/gen-promptpay-qr.mjs --phone 0XXXXXXXXX [--amount 50.00]` แล้ว commit ไฟล์ที่ replace ไป (ต้อง `npm i qrcode --save-dev` ก่อนครั้งแรก)
-- แจ้งเตือน LINE (ถ้าเปิด) จะแนบรหัสคิวเพื่อให้ตรวจสลิปง่าย
-- ทางเลือกถ้าใช้ของจริง: ใช้บัญชี PromptPay ที่มี QR จริง แล้วแทนรูป `images/promptpay-qr.svg`
-
 ### Deploy ฟรีบน Render
 
 1. push repo ขึ้น GitHub (ทำแล้ว)
@@ -125,7 +115,7 @@ Node.js server ไฟล์เดียว (`server.js`) ไม่มี depende
 
 | ข้อมูล | ตำแหน่งที่แก้ |
 | --- | --- |
-| เบอร์โทร / ช่องทางติดต่อ | footer และหน้า contact/ticket ทุกหน้า (ค้นหา `082-949-0410`, `@rxng_lr`) |
+| เบอร์โทร / ช่องทางติดต่อ | footer และหน้า contact/ticket ทุกหน้า (ค้นหา `099-999-9999`, `@lalitanail`) |
 | ราคา | `pricing.html` และการ์ดราคาใน `index.html` |
 | รายการบริการ | `services.html` และ select ใน `booking.html` (ค่า `value` ของ option ใช้อ้างอิงใน `?service=`) |
 | ข้อมูลร้าน / รีวิว | `about.html`, `index.html` |
@@ -143,6 +133,6 @@ Node.js server ไฟล์เดียว (`server.js`) ไม่มี depende
 ## หมายเหตุ
 
 รูปภาพทั้งหมดใน `images/` ตอนนี้เป็น **SVG placeholder** (ภาพกราฟิกเล็บแบบนามธรรม) ให้เปลี่ยนเป็นรูปถ่ายจริงก่อนเปิดใช้งานจริง
-จำนวนสถิติ (ลูกค้า, ผลงาน ฯลฯ) เป็นข้อมูลสมมติ
+ตำแหน่งร้าน ที่อยู่ และจำนวนสถิติ (ลูกค้า, ผลงาน ฯลฯ) เป็นข้อมูลสมมติ
 
 © 2026 Lalita Nail Studio. All Rights Reserved.
