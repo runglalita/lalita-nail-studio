@@ -1,0 +1,20 @@
+# Render deployment config — Lalita Nail Studio (static site + booking API)
+# วิธีใช้: เข้า app.render.com → New → Blueprint → เลือก repo นี้ (หรือ New Web Service)
+# หลัง deploy จะได้ URL เช่น https://lalita-nail-studio.onrender.com
+services:
+  - type: web
+    name: lalita-nail-studio
+    runtime: node
+    plan: free
+    envVars:
+      - key: NODE_VERSION
+        value: 24
+      # ใส่ token จาก https://notify-bot.line.me ระบบจะแจ้งเตือนจองใหม่ทาง LINE
+      - key: LINE_NOTIFY_TOKEN
+        sync: false
+      # ใช้ดูรายการจองทาง /api/bookings?token=... (เปลี่ยนจากค่า default ก่อนเปิดใช้งานจริง!)
+      - key: ADMIN_TOKEN
+        value: admin123
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /

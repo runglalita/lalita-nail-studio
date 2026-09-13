@@ -1,0 +1,14 @@
+{
+  "name": "lalita-nail-studio",
+  "version": "1.0.0",
+  "description": "Lalita Nail Studio — website + booking backend (zero dependency, SQLite)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

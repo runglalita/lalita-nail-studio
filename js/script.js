@@ -317,7 +317,7 @@
       return ok;
     };
 
-    bookingForm.addEventListener("submit", (e) => {
+    bookingForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       document.getElementById("formStatus")?.classList.remove("is-visible");
 
@@ -327,24 +327,82 @@
         return;
       }
 
-      const fmtDate = new Date(date.value + "T00:00:00").toLocaleDateString(
-        "th-TH",
-        { year: "numeric", month: "long", day: "numeric" }
-      );
-      const sumList = document.getElementById("bookSummary");
-      if (sumList) {
-        sumList.innerHTML = `
-          <li><strong>ชื่อ:</strong> ${name.value.trim()}</li>
-          <li><strong>เบอร์โทร:</strong> ${phone.value.trim()}</li>
-          <li><strong>บริการ:</strong> ${service.value} × ${n}</li>
-          <li><strong>วันที่:</strong> ${fmtDate} เวลา ${time.value} น.</li>
-          ${
-            notes && notes.value.trim()
-              ? `<li><strong>หมายเหตุ:</strong> ${notes.value.trim()}</li>`
-              : ""
-          }`;
+      const setFormBusy = (busy) => {
+        const btn = bookingForm.querySelector("button[type='submit']");
+        if (btn) {
+          btn.disabled = busy;
+          btn.textContent = busy ? "กำลังส่งข้อมูล..." : "ยืนยันการจอง";
+        }
+      };
+
+      const n = parseInt(people.value, 10);
+
+      setFormBusy(true);
+      try {
+        const resp = await fetch("/api/booking", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name.value.trim(),
+            phone: phone.value.trim(),
+            people: n,
+            service: service.value,
+            date: date.value,
+            time: time.value,
+            notes: notes ? notes.value.trim() : "",
+          }),
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok || !data.ok) {
+          throw new Error(data.error || "ส่งข้อมูลไม่สำเร็จ");
+        }
+
+        const fmtDate = new Date(date.value + "T00:00:00").toLocaleDateString("th-TH", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        const sumList = document.getElementById("bookSummary");
+        if (sumList) {
+          sumList.textContent = "";
+          const items = [
+            ["ชื่อ", name.value.trim()],
+            ["เบอร์โทร", phone.value.trim()],
+            ["บริการ", `${service.value} × ${n}`],
+            ["วันที่", `${fmtDate} เวลา ${time.value} น.`],
+          ];
+          if (notes && notes.value.trim()) items.push(["หมายเหตุ", notes.value.trim()]);
+          items.forEach(([k, v]) => {
+            const li = document.createElement("li");
+            const strong = document.createElement("strong");
+            strong.textContent = k + ":";
+            const span = document.createElement("span");
+            span.textContent = " " + v;
+            li.appendChild(strong);
+            li.appendChild(span);
+            sumList.appendChild(li);
+          });
+        }
+        bookingForm.reset();
+        if (service) service.value = "";
+        const status = document.getElementById("formStatus");
+        if (status) {
+          status.querySelector("strong").textContent = "จองคิวเรียบร้อยแล้ว";
+          status.querySelector("p").textContent = "กรุณารอการยืนยันจากทางร้าน";
+        }
+        showStatus("formStatus");
+      } catch (err) {
+        const status = document.getElementById("formStatus");
+        if (status) {
+          status.querySelector("strong").textContent = "ส่งข้อมูลไม่สำเร็จ";
+          status.querySelector("p").textContent = err.message + " — กรุณาลองใหม่ หรือแจ้งผ่าน LINE @lalitanail";
+          showStatus("formStatus", false);
+        } else {
+          alert(err.message);
+        }
+      } finally {
+        setFormBusy(false);
       }
-      showStatus("formStatus");
       bookingForm.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
@@ -371,10 +429,7 @@
     const cPhone = $("#ct-phone");
     const cMsg = $("#ct-message");
 
-    contactForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      document.getElementById("contactStatus")?.classList.remove("is-visible");
-
+    const validateContact = () => {
       let ok = true;
 
       if (!cName.value.trim()) {
@@ -384,20 +439,14 @@
         setError(cName, "", false);
       }
 
-      if (!cEmail.value.trim()) {
-        setError(cEmail, "กรุณากรอกอีเมลของคุณ", true);
-        ok = false;
-      } else if (!emailValid(cEmail.value)) {
+      if (cEmail.value.trim() && !emailValid(cEmail.value)) {
         setError(cEmail, "กรุณากรอกอีเมลให้ถูกต้อง เช่น name@email.com", true);
         ok = false;
       } else {
         setError(cEmail, "", false);
       }
 
-      if (!cPhone.value.trim()) {
-        setError(cPhone, "กรุณากรอกเบอร์โทรศัพท์", true);
-        ok = false;
-      } else if (!phoneValid(cPhone.value)) {
+      if (cPhone.value.trim() && !phoneValid(cPhone.value)) {
         setError(cPhone, "กรุณากรอกเบอร์โทรให้ถูกต้อง เช่น 099-999-9999", true);
         ok = false;
       } else {
@@ -411,14 +460,62 @@
         setError(cMsg, "", false);
       }
 
-      if (!ok) {
+      return ok;
+    };
+
+    contactForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      document.getElementById("contactStatus")?.classList.remove("is-visible");
+
+      if (!validateContact()) {
         const firstBad = contactForm.querySelector(".is-invalid");
         firstBad && firstBad.focus();
         return;
       }
 
-      showStatus("contactStatus");
-      contactForm.reset();
+      const setBusy = (busy) => {
+        const btn = contactForm.querySelector("button[type='submit']");
+        if (btn) {
+          btn.disabled = busy;
+          btn.textContent = busy ? "กำลังส่งข้อมูล..." : "ส่งข้อความ";
+        }
+      };
+
+      setBusy(true);
+      try {
+        const resp = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: cName.value.trim(),
+            phone: cPhone.value.trim(),
+            email: cEmail.value.trim(),
+            message: cMsg.value.trim(),
+          }),
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok || !data.ok) {
+          throw new Error(data.error || "ส่งข้อมูลไม่สำเร็จ");
+        }
+        contactForm.reset();
+        const status = document.getElementById("contactStatus");
+        if (status) {
+          status.querySelector("strong").textContent = "ส่งข้อความเรียบร้อยแล้ว";
+          status.querySelector("p").textContent = "ขอบคุณที่ติดต่อมา ทีมงานจะรีบตอบกลับโดยเร็วที่สุดค่ะ";
+        }
+        showStatus("contactStatus");
+      } catch (err) {
+        const status = document.getElementById("contactStatus");
+        if (status) {
+          status.querySelector("strong").textContent = "ส่งข้อมูลไม่สำเร็จ";
+          status.querySelector("p").textContent = err.message + " — กรุณาลองใหม่ หรือแจ้งผ่าน LINE @lalitanail";
+          showStatus("contactStatus", false);
+        } else {
+          alert(err.message);
+        }
+      } finally {
+        setBusy(false);
+      }
       contactForm.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
