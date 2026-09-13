@@ -243,6 +243,7 @@
     const service = $("#bk-service");
     const people = $("#bk-people");
     const notes = $("#bk-notes");
+    const slip = $("#bk-slip");
 
     // Preselect service from URL ?service=...
     const params = new URLSearchParams(window.location.search);
@@ -314,6 +315,13 @@
         setError(people, "", false);
       }
 
+      if (slip && !slip.files.length) {
+        setError(slip, "กรุณาอัปโหลดสลิปโอนมัดจำค่า 50 บาท", true);
+        ok = false;
+      } else {
+        setError(slip, "", false);
+      }
+
       return ok;
     };
 
@@ -339,18 +347,19 @@
 
       setFormBusy(true);
       try {
+        const fd = new FormData();
+        fd.append("name", name.value.trim());
+        fd.append("phone", phone.value.trim());
+        fd.append("people", n);
+        fd.append("service", service.value);
+        fd.append("date", date.value);
+        fd.append("time", time.value);
+        fd.append("notes", notes ? notes.value.trim() : "");
+        if (slip && slip.files[0]) fd.append("slip", slip.files[0]);
+
         const resp = await fetch("/api/booking", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: name.value.trim(),
-            phone: phone.value.trim(),
-            people: n,
-            service: service.value,
-            date: date.value,
-            time: time.value,
-            notes: notes ? notes.value.trim() : "",
-          }),
+          body: fd, // fetch ตั้ง Content-Type พร้อม boundary ให้เอง
         });
         const data = await resp.json().catch(() => ({}));
         if (!resp.ok || !data.ok) {
@@ -370,6 +379,7 @@
             ["เบอร์โทร", phone.value.trim()],
             ["บริการ", `${service.value} × ${n}`],
             ["วันที่", `${fmtDate} เวลา ${time.value} น.`],
+            ["มัดจำ", "โอนแล้ว 50 บาท"],
           ];
           if (notes && notes.value.trim()) items.push(["หมายเหตุ", notes.value.trim()]);
           items.forEach(([k, v]) => {
@@ -388,7 +398,7 @@
         const status = document.getElementById("formStatus");
         if (status) {
           status.querySelector("strong").textContent = "จองคิวเรียบร้อยแล้ว";
-          status.querySelector("p").textContent = "กรุณารอการยืนยันจากทางร้าน";
+          status.querySelector("p").textContent = "รอช่างตรวจสอบสลิปมัดจำและยืนยันคิว (รอแจ้งทาง LINE/โทร)";
         }
         showStatus("formStatus");
       } catch (err) {
@@ -413,10 +423,11 @@
     }
 
     // Clear error as user types
-    [name, phone, time, service, people, date].forEach((f) => {
+    [name, phone, time, service, people, date, notes].forEach((f) => {
       f &&
         f.addEventListener("input", () => setError(f, "", false));
     });
+    slip && slip.addEventListener("change", () => setError(slip, "", false));
   }
 
   /* ------------------------------------------------------------------ *
