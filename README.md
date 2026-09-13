@@ -36,7 +36,7 @@ todolist4/
 
 - Sticky header พร้อม hamburger menu บน mobile (≤ 1023px)
 - โปสการ์ด reveal-on-scroll (IntersectionObserver), hover effect ทุกการ์ด
-- ปุ่มลอย: โทร / LINE / Instagram / กลับขึ้นบน
+- ปุ่มลอย: โทร / Instagram / กลับขึ้นบน
 - แกลเลอรี: ตัวกรอง All · Minimal · Korean · French · Glitter · Luxury + Lightbox (เลื่อนซ้าย-ขวา, ปุ่ม ESC)
 - ฟอร์มจองคิว: validation ชื่อ, เบอร์โทร (ไทย 0XXXXXXXXX), วันที่ต้องไม่เป็นอดีต, เวลา 10:00–19:00, ต้องเลือกบริการ, จำนวน 1–10 พร้อมสรุปข้อมูลก่อนส่ง
 - ฟอร์มติดต่อ: ชื่อและข้อความบังคับ, อีเมล/โทรศัพท์เป็นตัวเลือก (ตรวจรูปแบบเมื่อกรอก)
@@ -125,7 +125,7 @@ Node.js server ไฟล์เดียว (`server.js`) ไม่มี depende
 
 | ข้อมูล | ตำแหน่งที่แก้ |
 | --- | --- |
-| เบอร์โทร / ช่องทางติดต่อ | footer และหน้า contact/ticket ทุกหน้า (ค้นหา `082-949-0410`, `@rxng_lr`, `@lalitanail`) |
+| เบอร์โทร / ช่องทางติดต่อ | footer และหน้า contact/ticket ทุกหน้า (ค้นหา `082-949-0410`, `@rxng_lr`) |
 | ราคา | `pricing.html` และการ์ดราคาใน `index.html` |
 | รายการบริการ | `services.html` และ select ใน `booking.html` (ค่า `value` ของ option ใช้อ้างอิงใน `?service=`) |
 | ข้อมูลร้าน / รีวิว | `about.html`, `index.html` |

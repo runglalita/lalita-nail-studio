@@ -398,14 +398,14 @@
         const status = document.getElementById("formStatus");
         if (status) {
           status.querySelector("strong").textContent = "จองคิวเรียบร้อยแล้ว";
-          status.querySelector("p").textContent = "รอช่างตรวจสอบสลิปมัดจำและยืนยันคิว (รอแจ้งทาง LINE/โทร)";
+          status.querySelector("p").textContent = "รอช่างตรวจสอบสลิปมัดจำและยืนยันคิว (รอแจ้งทางโทรศัพท์)";
         }
         showStatus("formStatus");
       } catch (err) {
         const status = document.getElementById("formStatus");
         if (status) {
           status.querySelector("strong").textContent = "ส่งข้อมูลไม่สำเร็จ";
-          status.querySelector("p").textContent = err.message + " — กรุณาลองใหม่ หรือแจ้งผ่าน LINE @lalitanail";
+          status.querySelector("p").textContent = err.message + " — กรุณาลองใหม่ หรือแจ้งผ่านโทรศัพท์ 082-949-0410";
           showStatus("formStatus", false);
         } else {
           alert(err.message);
@@ -519,7 +519,7 @@
         const status = document.getElementById("contactStatus");
         if (status) {
           status.querySelector("strong").textContent = "ส่งข้อมูลไม่สำเร็จ";
-          status.querySelector("p").textContent = err.message + " — กรุณาลองใหม่ หรือแจ้งผ่าน LINE @lalitanail";
+          status.querySelector("p").textContent = err.message + " — กรุณาลองใหม่ หรือแจ้งผ่านโทรศัพท์ 082-949-0410";
           showStatus("contactStatus", false);
         } else {
           alert(err.message);
