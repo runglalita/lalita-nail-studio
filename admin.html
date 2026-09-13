@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin | Lalita Nail Studio</title>
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { padding-top: 2rem; }
+    .admin-wrap { max-width: 1200px; margin-inline: auto; padding: 0 1.25rem; }
+    .admin-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .admin-login { max-width: 420px; margin: 3rem auto; }
+    .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .admin-stat { background: var(--surface, #fff); border: 1px solid var(--border, #eee2e4); border-radius: 16px; padding: 1.1rem 1.25rem; box-shadow: var(--shadow-sm, 0 2px 8px rgba(178,113,129,.08)); }
+    .admin-stat strong { display: block; font-size: 1.5rem; font-family: var(--font-head, inherit); color: var(--brown, #5a3a33); }
+    .admin-table-card { background: var(--surface, #fff); border: 1px solid var(--border, #eee2e4); border-radius: 16px; padding: 1.25rem; margin-bottom: 2rem; overflow-x: auto; box-shadow: var(--shadow-sm, 0 2px 8px rgba(178,113,129,.08)); }
+    .admin-table-card h2 { margin-bottom: 1rem; font-family: var(--font-head, inherit); }
+    table.admin-table { width: 100%; border-collapse: collapse; font-size: .92rem; min-width: 700px; }
+    .admin-table th, .admin-table td { text-align: left; padding: .65rem .5rem; border-bottom: 1px solid var(--border, #eee2e4); vertical-align: top; }
+    .admin-table th { color: var(--brown, #5a3a33); font-weight: 600; white-space: nowrap; background: rgba(208,134,151,.06); }
+    .admin-table tr:hover td { background: rgba(208,134,151,.05); }
+    .badge { display: inline-block; padding: .15rem .6rem; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+    .b-new { background: #ffe9ec; color: #d04b63; }
+    .b-confirmed { background: #e6f2ec; color: #2f7d5d; }
+    .b-done { background: #e4ebf5; color: #3a63a5; }
+    .b-cancelled { background: #eeeeee; color: #777; }
+    select.status { border: 1px solid var(--border, #eee2e4); border-radius: 8px; padding: .3rem .5rem; background: #fff; font-size: .85rem; }
+    .empty { text-align: center; color: #9a8a8d; padding: 2rem 0; }
+    .admin-tools { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+    .flash { padding: .8rem 1rem; border-radius: 12px; margin-bottom: 1.25rem; font-size: .92rem; display: none; }
+    .flash.show { display: block; }
+    .flash.err { background: #ffe4e4; color: #b32020; }
+    .flash.ok { background: #e4f2e6; color: #1f6b38; }
+    @media (max-width: 1024px) { .admin-stats { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .admin-stats { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <div class="admin-wrap">
+    <header class="admin-head">
+      <div>
+        <p class="eyebrow">Admin Panel</p>
+        <h1>Lalita Nail Studio</h1>
+      </div>
+      <div class="admin-tools">
+        <button class="btn btn-primary btn-sm" id="btnRefresh" type="button">รีเฟรช</button>
+        <button class="btn btn-outline btn-sm" id="btnLogout" type="button" hidden>ออกจากระบบ</button>
+      </div>
+    </header>
+
+    <div class="flash" id="flash" role="status" aria-live="polite"></div>
+
+    <!-- login -->
+    <section class="form-card admin-login" id="loginView">
+      <h2>เข้าสู่ระบบ Admin</h2>
+      <p>พิมพ์รหัส <code>ADMIN_TOKEN</code> ที่ตั้งไว้บนเซิร์ฟเวอร์</p>
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="tokenInput">รหัสผู้ดูแล</label>
+          <input class="form-control" type="password" id="tokenInput" autocomplete="current-password" required>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">เข้าสู่ระบบ</button>
+      </form>
+    </section>
+
+    <!-- dashboard (hidden until logged in) -->
+    <main id="dashView" hidden>
+      <div class="admin-stats" id="statsRow"></div>
+
+      <div class="admin-table-card">
+        <h2>รายการจอง</h2>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>#</th><th>ชื่อ</th><th>โทร</th><th>บริการ</th><th>จำนวน</th>
+              <th>วันที่</th><th>เวลา</th><th>หมายเหตุ</th><th>สถานะ</th><th>จองเมื่อ</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsBody"></tbody>
+        </table>
+      </div>
+
+      <div class="admin-table-card">
+        <h2>ข้อความจากฟอร์มติดต่อ</h2>
+        <table class="admin-table">
+          <thead>
+            <tr><th>#</th><th>ชื่อ</th><th>โทร</th><th>อีเมล</th><th>ข้อความ</th><th>เวลา</th></tr>
+          </thead>
+          <tbody id="contactsBody"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -79,6 +79,15 @@ Node.js server ไฟล์เดียว (`server.js`) ไม่มี depende
 | `GET` | `/api/contacts?token=...` | ดูรายการข้อความ (ต้องมี `ADMIN_TOKEN`) |
 | `PATCH` | `/api/bookings` | เปลี่ยนสถานะจอง (`new` / `confirmed` / `done` / `cancelled`) |
 
+### หน้า Admin (`/admin.html`)
+
+เข้าที่ `https://<โดเมน>/admin.html` แล้วพิมพ์รหัส `ADMIN_TOKEN` (เก็บใน local storage ของเบราว์เซอร์ตัวเอง):
+- ดูสถิติย่อ + ตารางรายการจองทั้งหมด (เปลี่ยนสถานะได้ทันที)
+- ดูข้อความจากฟอร์มติดต่อ
+- ปุ่มรีเฟรช / ออกจากระบบ
+
+หน้านี้มี `noindex` กันโผล่ใน Google และไม่มีลิงก์จากหน้าเว็บลูกค้า (เข้าเว็บด้วย `/admin.html` เอง)
+
 ### ตัวแปร environment
 
 | ตัวแปร | ความหมาย |
