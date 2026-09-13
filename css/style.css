@@ -2375,8 +2375,8 @@ select.form-control {
   margin-bottom: 1rem;
 }
 .deposit-box img {
-  width: 116px;
-  height: 116px;
+  width: 150px;
+  height: 150px;
   border-radius: 10px;
   flex-shrink: 0;
   border: 1px solid #f0d9de;
